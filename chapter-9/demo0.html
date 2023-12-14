@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D3 实现柱状图</title>
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/d3/7.8.5/d3.js"></script> -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  </head>
+  <body>
+    <script>
+      d3.select('body')
+        .append('svg')
+        .attr('width', 960)
+        .attr('height', 500)
+        .append('g')
+        .attr('transform', 'translate(20,20)')
+        .append('rect')
+        .attr('width', 920)
+        .attr('height', 460)
+    </script>
+  </body>
+</html>

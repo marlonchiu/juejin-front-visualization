@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>D3 实现柱状图</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/d3/7.8.5/d3.js"></script>
+    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/d3@7"></script> -->
+  </head>
+  <body>
+    <!--
+    实现柱状图等其他图都会遵循一个套路：
+      定义数据集；
+      定义绘图区域（安全边界 margin + 生成 SVG 的绘图区域）；
+      设置比例尺；
+      生成坐标轴；
+      绘制图元。
+    -->
+    <svg id="chart"></svg>
+
+    <script>
+      // 定义数据集
+      const data = [
+        { label: 'A', value: 20 },
+        { label: 'B', value: 50 },
+        { label: 'C', value: 30 },
+        { label: 'D', value: 80 },
+        { label: 'E', value: 40 }
+      ]
+
+      // 定义绘图区域
+      const margin = { top: 20, right: 20, bottom: 30, left: 40 }
+      const width = 960 - margin.left - margin.right
+      const height = 500 - margin.top - margin.bottom
+
+      const svg = d3
+        .select('#chart')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+      // 设置比例尺
+      const x = d3
+        .scaleBand()
+        .domain(
+          data.map(function (d) {
+            return d.label
+          })
+        )
+        .range([0, width])
+        .padding(0.1)
+
+      const y = d3
+        .scaleLinear()
+        .domain([
+          0,
+          d3.max(data, function (d) {
+            return d.value
+          })
+        ])
+        .range([height, 0])
+
+      // 生成坐标轴
+      // X轴
+      svg
+        .append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(d3.axisBottom(x))
+
+      // Y轴
+      svg.append('g').attr('class', 'y axis').call(d3.axisLeft(y).ticks(10))
+
+      // 绘制图元（柱形）
+      svg
+        .selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('rect')
+        .attr('class', 'bar')
+        .attr('x', function (d) {
+          return x(d.label)
+        })
+        .attr('y', function (d) {
+          return y(d.value)
+        })
+        .attr('width', x.bandwidth())
+        .attr('height', function (d) {
+          return height - y(d.value)
+        })
+    </script>
+  </body>
+</html>
